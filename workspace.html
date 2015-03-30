@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!-- https://developers.google.com/blockly/installation/injecting-resizable -->
+<html>
+
+  <head> 
+  	<meta charset="UTF-8" />
+    <title>Making workspace for Drawing with an Arrow</title>
+    <script src="./js/blockly_compressed.js"></script>
+    <script src="./js/blocks_compressed.js"></script>
+    <script src="./js/javascript_compressed.js"></script>
+    <script src="./js/customBlocks.js"></script>
+    <style>
+       html, body {
+          background-color: #000;
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+          height: 100%;
+        }
+        .blocklySvg {
+          height: 100%;
+          width: 100%;
+          background-color: #000;
+        }
+    </style>
+  </head>
+
+  <body onLoad="init()">
+    <xml id="toolbox" style="display: none">
+      <category name="Program Flow">
+        <block type="whenrun"></block>
+        <block type="repeatblock"></block>
+      </category>
+      <category name="Instructions">
+        <block type="rightleft"></block>
+        <block type="forward"></block>
+      </category>
+    </xml>
+  </body>
+
+  
+  <script>
+    function init() {
+        Blockly.inject(
+          document.body,
+          {toolbox: document.getElementById('toolbox'), disable: false}
+        );
+    }
+  </script>
+
+</html>
