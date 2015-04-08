@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en"> 
+<head> 
+	<meta charset="UTF-8" />
+    <title>DrawWithArrows Workbench - DrawWithArrows</title>
+
+    <script type="text/javascript" src="./js/acorn_interpreter.js"></script>
+    <script type="text/javascript" src="./js/nativeHelpers.js"></script>
+    <script type="text/javascript" src="./js/asyncHelpers.js"></script>
+	<script type="text/javascript" src="./js/phaser.min.js"></script>
+	
+	<script type="text/javascript" src="./js/roblockwar.dev.robot.js"></script>
+	<script type="text/javascript" src="./js/roblockwar.dev.engine.js"></script>
+	
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+    <script type="text/javascript" id="RoBlockWar_CustomJS">
+        function init() {
+            window.parent.battlefieldLoaded(startGame, reload);
+        }
+        
+        function reload(){
+            location.reload();
+        }
+        
+        function startGame(robotCodes, highlighting){
+       		return RoBlockWar.BuildGame(robotCodes, highlighting);
+        };
+    </script>
+</head>
+<body id="body" onload="init()">
+</body>
+</html>

@@ -7,8 +7,10 @@
     <title>Making workspace for Drawing with an Arrow</title>
     <script src="./js/blockly_compressed.js"></script>
     <script src="./js/blocks_compressed.js"></script>
+    <script src="./js/en.js"></script>
     <script src="./js/javascript_compressed.js"></script>
-    <script src="./js/customBlocks.js"></script>
+    <!--<script src="./js/customBlocks.js"></script>-->
+    <script src="./js/roblockwar.dev.blocks.js"></script>
     <style>
        html, body {
           background-color: #000;
@@ -45,6 +47,10 @@
           document.body,
           {toolbox: document.getElementById('toolbox'), disable: false}
         );
+        Blockly.mainWorkspace.traceOn(true);
+        if(window.parent != null && window.parent.workspaceLoaded != null){
+          window.parent.workspaceLoaded(Blockly);
+        }
     }
   </script>
 
