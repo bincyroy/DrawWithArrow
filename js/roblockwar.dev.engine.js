@@ -38,7 +38,7 @@ RoBlockWar.Preloader.prototype = {
     this.load.atlas('enemy', './assets/enemy-tanks.png', './assets/tanks.json');
     this.load.image('logo', './assets/logo.png');
     this.load.image('bullet', './assets/bullet.png');
-    this.load.image('earth', './assets/scorched_earth.png');
+    this.load.image('earth', './assets/sky.png');
     this.load.spritesheet('kaboom', './assets/explosion.png', 64, 64, 23);
   },
   create: function() {

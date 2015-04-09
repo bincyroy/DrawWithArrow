@@ -266,9 +266,9 @@ RoBlockWar_Robot.prototype.init = function(body, turret){
     this.RobotTurret = turret;
 };
 
+var done = false;
+var i = 0;
 RoBlockWar_Robot.prototype.update = function() {
-  this.RobotPlayer.body.velocity.x = forwardPosition;
-  this.RobotPlayer.body.velocity.y = 0;
   
   /*
   // Update location phaser -> model
@@ -281,9 +281,13 @@ RoBlockWar_Robot.prototype.update = function() {
   this.RobotPlayer.body.velocity.x = newSpeedX;
   this.RobotPlayer.body.velocity.y = newSpeedY;
   */
-  
-  console.log("x: " + forwardPosition);
-  
+        this.RobotPlayer.body.x = forwardPosition;
+        this.RobotPlayer.body.velocity.x = 0;
+        this.RobotPlayer.body.velocity.y = 0;
+        this.RobotPlayer.animations.play('move');
+    
+  console.log("x position: ", this.RobotPlayer.body.x);
+  /* 
   if(this.RobotPlayer.body.velocity.y != 0 || 
      this.RobotPlayer.body.velocity.x != 0) {
     this.RobotPlayer.animations.play('move');
@@ -296,6 +300,7 @@ RoBlockWar_Robot.prototype.update = function() {
   this.RobotTurret.x = this.RobotPlayer.x;
   this.RobotTurret.y = this.RobotPlayer.y;
   this.RobotTurret.angle = this.Registers.getR('AIM');
+  */
 };
 
 RoBlockWar_Robot.prototype.sendRadarPulse = function (callback) {
@@ -330,11 +335,13 @@ RoBlockWar_Robot.prototype.fireAtDistance = function (distance) {
 };
 
 RoBlockWar_Robot.prototype.moveForwardBackward = function(direction, numPixels) {
+    console.log("moveForward");
     console.log("direction: " + direction);
     console.log("numPixels: " + numPixels);
-    forwardPosition = numPixels;
+    forwardPosition += numPixels;
     console.log("forwardPosition: " + forwardPosition);
-    
+    done = false;
+    i = 0;
 }
 
 RoBlockWar_Robot.prototype.waitFor = function (seconds, callback) {
