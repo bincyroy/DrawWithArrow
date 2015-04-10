@@ -47,6 +47,7 @@
           document.body,
           {toolbox: document.getElementById('toolbox'), disable: false}
         );
+        
         Blockly.mainWorkspace.traceOn(true);
         if(window.parent != null && window.parent.workspaceLoaded != null){
           window.parent.workspaceLoaded(Blockly);
