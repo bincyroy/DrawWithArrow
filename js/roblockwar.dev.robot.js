@@ -4,54 +4,79 @@ RoBlockWar.Settings = RoBlockWar.Settings || {};
 RoBlockWar.Settings.Robot = RoBlockWar.Settings.Robot || {};
 
 RoBlockWar.Settings.Robot.CannonCoolDown = 5;
-var forwardPosition = 0;
+var position = 150;
+var direction = "forwardDirection";
+var positionArr = [];
+var directionArr = [];
+var isCompleted = [];
 
 function RoBlockWar_Robot(processId, robotName, userCode){
   this.processId = processId;
   this.RobotPlayer = null;
-  this.RobotTurret = null;
   this.RobotName = robotName;
   this.CodeToRun = userCode;
   this.newPosition = null;
 }
 
-RoBlockWar_Robot.prototype.init = function(body, turret){
-    this.RobotPlayer = body;
-    this.RobotTurret = turret;
+RoBlockWar_Robot.prototype.init = function(player) {
+    this.RobotPlayer = player;
 };
 
 RoBlockWar_Robot.prototype.update = function() {
-    
-    if(this.RobotPlayer.body.x >= forwardPosition) {
-        this.RobotPlayer.body.velocity.x = 0;
-        this.RobotPlayer.body.velocity.y = 0;  
-        this.RobotPlayer.animations.stop();
-        this.RobotPlayer.frame = 1;
-    } else {
-        this.RobotPlayer.body.velocity.x = 23;
-        this.RobotPlayer.body.velocity.y = 0;
-        this.RobotPlayer.animations.play('move');
-        this.RobotPlayer.body.x += 1;
-        if(this.RobotPlayer.body.x >= forwardPosition) {
-            this.RobotPlayer.body.velocity.x = 0;
-            this.RobotPlayer.body.velocity.y = 0;
-            this.RobotPlayer.animations.stop();
-            this.RobotPlayer.frame = 1;
+    this.RobotPlayer.body.y = 250;
+    var forwardTotal = 0;
+    var backwardTotal = 0;
+    for(var i = 0; i < directionArr.length; i++) {
+        if(directionArr[i] === 'forwardDirection') {
+            forwardTotal += positionArr[i];
+        } else {
+            backwardTotal += positionArr[i];
         }
+        console.log("forwardTotal: ", forwardTotal);
+        console.log("backwardTotal: ", backwardTotal)
+        console.log("X Position: ", this.RobotPlayer.body.x);
+        while(!isCompleted[i]) {
+            if(directionArr[i] === "forwardDirection") {
+                this.RobotPlayer.body.velocity.x = 23;
+                this.RobotPlayer.body.velocity.y = 0;
+                this.RobotPlayer.body.x += 1;
+                this.RobotPlayer.game.add.sprite(this.RobotPlayer.body.x, 250, 'bullet');
+                this.RobotPlayer.body.y = 250;
+                this.RobotPlayer.animations.play('right');
+                if(this.RobotPlayer.body.x >= Math.abs(forwardTotal - backwardTotal)) {
+                    this.RobotPlayer.body.velocity.x = 0;
+                    this.RobotPlayer.body.velocity.y = 0; 
+                    this.RobotPlayer.animations.stop();
+                    this.RobotPlayer.frame = 3;
+                    isCompleted[i] = true;
+                }
+            } else if(directionArr[i] == "backwardDirection") {
+                this.RobotPlayer.body.velocity.x = 5;
+                this.RobotPlayer.body.velocity.y = 0;
+                this.RobotPlayer.body.x -= 1;
+                this.RobotPlayer.body.y = 250;
+                this.RobotPlayer.animations.play('left');
+                if(this.RobotPlayer.body.x <= Math.abs(forwardTotal - backwardTotal)) {
+                    this.RobotPlayer.body.velocity.x = 0;
+                    this.RobotPlayer.body.velocity.y = 0;
+                    this.RobotPlayer.animations.stop();
+                    this.RobotPlayer.frame = 1;
+                    isCompleted[i] = true;
+                }
+            }
+        } // while
     }
-    console.log("x position: ", this.RobotPlayer.body.x);
 };
 
-RoBlockWar_Robot.prototype.moveForwardBackward = function(direction, numPixels) {
+RoBlockWar_Robot.prototype.moveForwardBackward = function(selectedDirection, numPixels) {
     console.log("moveForward");
-    console.log("direction: " + direction);
+    console.log("direction: " + selectedDirection);
     console.log("numPixels: " + numPixels);
-    if(direction === "forwardDirection") {
-        forwardPosition += numPixels;
-    } else if(direction === "backwardDirection") {
-        forwardPosition -= numPixels;
-    }
-    console.log("forwardPosition: " + forwardPosition);
+    
+    directionArr.push(selectedDirection);
+    positionArr.push(numPixels);
+    isCompleted.push(false);
+
 }
 
 RoBlockWar_Robot.prototype.waitFor = function (seconds, callback) {
