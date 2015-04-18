@@ -12,6 +12,7 @@ RoBlockWar.Boot.prototype = {
   },
     
   preload: function() {
+    //this.load.image('preloadbar', './assets/preloader-bar.png');
   },
   create: function() {
     this.state.start('Preloader');
@@ -27,16 +28,21 @@ RoBlockWar.Preloader = function (game) {
 
 RoBlockWar.Preloader.prototype = {
   preload: function() {
+    /*
+    // show loading screen
+    this.preloadBar = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'preloadbar');
+
+    this.load.setPreloadSprite(this.preloadBar);
+    */
 
     // load game assets
     //this.load.atlas('robot', './assets/tanks.png', './assets/tanks.json');
-    //this.load.atlas()
     this.load.spritesheet('robot', './assets/arrow.png', 68, 68);
     //this.load.spritesheet('robot', './assets/dude.png', 32, 48);
-    //this.load.atlas('robot', './assets/arrow.png');
     this.load.image('logo', './assets/logo.png');
     this.load.image('earth', './assets/sky.png');
     this.load.image('bullet', './assets/bullet.png');
+    this.load.image('point', './assets/point.png');
   },
   create: function() {
     this.state.start('Game');
@@ -95,12 +101,14 @@ RoBlockWar.Game.prototype = {
       //botView.anchor.setTo(0.5, 0.5);
       //botView.animations.add('move', ['tank1', 'tank2', 'tank3', 'tank4', 'tank5', 'tank6'], 20, true);
       botView.animations.add('right', [3, 3, 3, 3, 3], 10, true);
-      botView.animations.add('left', [1, 1, 1, 1, 1], 10, true)
+      botView.animations.add('left', [1, 1, 1, 1, 1], 10, true);
+      botView.animations.add('down', [0, 0, 0, 0, 0], 10, true);
+      botView.animations.add('up', [2, 2, 2, 2, 2], 10, true);
   
       //  This will force it to decelerate and limit its speed
       this.game.physics.enable(botView, Phaser.Physics.ARCADE);
-      //botView.body.drag.set(1500);
-      botView.body.maxVelocity.setTo(500, 500);
+      botView.body.drag.set(0.2);
+      botView.body.maxVelocity.setTo(400, 400);
       botView.body.collideWorldBounds = true;
   
       this.game.Robots[i].init(botView);
@@ -114,7 +122,6 @@ RoBlockWar.Game.prototype = {
   
 	update: function () {
 	    var startWith = (this.time.totalElapsedSeconds() % this.game.Robots.length) / 100;
-	    
         for(var i = 0; i < this.game.Robots.length; i++){
             this.game.physics.arcade.collide(this.game.Robots[i].RobotPlayer, this.blockedLayer);
             this.game.Robots[i].update();
@@ -141,7 +148,7 @@ RoBlockWar.BuildGame = function(robotCodes, highlightFunc) {
   console.log("robotCodes: ", robotCodes);
   var bots = [];
   // for(var i = 0; i < robotCodes.length; i++){
-  for(var i = 0; i < 1; i++){
+  for(var i = 0; i < 1; i++) {
       var newRobot = new RoBlockWar_Robot(i, "DevBot" + i, robotCodes[i]);
       bots.push(newRobot);
   }
@@ -175,4 +182,3 @@ RoBlockWar.BuildGame = function(robotCodes, highlightFunc) {
 	game.state.start('Boot');
 	return game;
 };
-

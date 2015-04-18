@@ -9,6 +9,11 @@ var direction = "forwardDirection";
 var positionArr = [];
 var directionArr = [];
 var isCompleted = [];
+var moveUp = false;
+var moveDown = false;
+var moveLeft = false;
+var moveRight = true;
+
 
 function RoBlockWar_Robot(processId, robotName, userCode){
   this.processId = processId;
@@ -23,33 +28,64 @@ RoBlockWar_Robot.prototype.init = function(player) {
 };
 
 RoBlockWar_Robot.prototype.update = function() {
-    this.RobotPlayer.body.y = 250;
+    
+    //this.RobotPlayer.body.y = 250;
     var forwardTotal = 0;
     var backwardTotal = 0;
     for(var i = 0; i < directionArr.length; i++) {
         if(directionArr[i] === 'forwardDirection') {
             forwardTotal += positionArr[i];
-        } else {
+        } else if(directionArr[i] === 'backwardDirection') {
             backwardTotal += positionArr[i];
         }
         console.log("forwardTotal: ", forwardTotal);
         console.log("backwardTotal: ", backwardTotal)
         console.log("X Position: ", this.RobotPlayer.body.x);
+        var count = 0;
         while(!isCompleted[i]) {
+            this.RobotPlayer.body.velocity.x = 0;
+            this.RobotPlayer.body.velocity.y = 0;
             if(directionArr[i] === "forwardDirection") {
-                this.RobotPlayer.body.velocity.x = 23;
-                this.RobotPlayer.body.velocity.y = 0;
-                this.RobotPlayer.body.x += 1;
-                this.RobotPlayer.game.add.sprite(this.RobotPlayer.body.x, 250, 'bullet');
-                this.RobotPlayer.body.y = 250;
-                this.RobotPlayer.animations.play('right');
+                
+                //this.RobotPlayer.body.velocity.y = 0;
+                if(moveUp) {
+                    this.RobotPlayer.body.velocity.y = 150;
+                    this.RobotPlayer.body.y -= 1;
+                    this.RobotPlayer.game.add.sprite(this.RobotPlayer.body.x, this.RobotPlayer.body.y, 'point');
+                    count += 1;
+                    this.RobotPlayer.animations.play('up');
+                    if(count >= positionArr[i]) {
+                        this.RobotPlayer.body.velocity.y = 0;
+                        isCompleted[i] = true;
+                    }
+                } else if(moveDown) {
+                    this.RobotPlayer.body.y += 1;
+                    this.RobotPlayer.animations.play('down');
+                } else if(moveLeft) {
+                    this.RobotPlayer.body.x -= 1;
+                    this.RobotPlayer.animations.play('left');
+                } else if(moveRight) {
+                    this.RobotPlayer.body.velocity.x = 150;
+                    this.RobotPlayer.body.x += 1;
+                    this.RobotPlayer.game.add.sprite(this.RobotPlayer.body.x, this.RobotPlayer.body.y, 'point');
+                    this.RobotPlayer.animations.play('right');
+                    if(this.RobotPlayer.body.x >= positionArr[i]) {
+                        this.RobotPlayer.body.velocity.x = 0;
+                        isCompleted[i] = true;
+                    }
+                }
+                // this.RobotPlayer.game.add.sprite(this.RobotPlayer.body.x, 250, 'bullet');
+                //this.RobotPlayer.body.y = 250;
+                // this.RobotPlayer.animations.play('right');
+                /*
                 if(this.RobotPlayer.body.x >= Math.abs(forwardTotal - backwardTotal)) {
                     this.RobotPlayer.body.velocity.x = 0;
-                    this.RobotPlayer.body.velocity.y = 0; 
-                    this.RobotPlayer.animations.stop();
+                    //this.RobotPlayer.body.velocity.y = 0; 
+                    //this.RobotPlayer.animations.stop();
                     this.RobotPlayer.frame = 3;
                     isCompleted[i] = true;
                 }
+                */
             } else if(directionArr[i] == "backwardDirection") {
                 this.RobotPlayer.body.velocity.x = 5;
                 this.RobotPlayer.body.velocity.y = 0;
@@ -59,17 +95,36 @@ RoBlockWar_Robot.prototype.update = function() {
                 if(this.RobotPlayer.body.x <= Math.abs(forwardTotal - backwardTotal)) {
                     this.RobotPlayer.body.velocity.x = 0;
                     this.RobotPlayer.body.velocity.y = 0;
-                    this.RobotPlayer.animations.stop();
+                    //this.RobotPlayer.animations.stop();
                     this.RobotPlayer.frame = 1;
                     isCompleted[i] = true;
                 }
+            } else if(directionArr[i] == "leftDirection") {
+                console.log("TURN LEFT");
+                if(directionArr[i-1] == "forwardDirection") {
+                    if(positionArr[i] <= 90) {
+                        this.RobotPlayer.animations.play('up');
+                        moveUp = true;
+                        moveDown = false;
+                        moveLeft = false;
+                        moveRight = false;
+                    } else if(positionArr[i] > 90 && positionArr[i] <= 180) {
+                        this.RobotPlayer.animations.play('left');
+                    } else if(positionArr[i] > 180 && positionArr[i] <= 270) {
+                        this.RobotPlayer.animations.play('down');
+                    } else if(positionArr[i] > 270 && positionArr[i] <= 360) {
+                        this.RobotPlayer.animations.play('right');
+                    }
+                    isCompleted[i] = true;
+                }
+            } else if(directionArr[i] == "rightDirection") {
+                
             }
         } // while
     }
 };
 
 RoBlockWar_Robot.prototype.moveForwardBackward = function(selectedDirection, numPixels) {
-    console.log("moveForward");
     console.log("direction: " + selectedDirection);
     console.log("numPixels: " + numPixels);
     
@@ -77,6 +132,15 @@ RoBlockWar_Robot.prototype.moveForwardBackward = function(selectedDirection, num
     positionArr.push(numPixels);
     isCompleted.push(false);
 
+}
+
+RoBlockWar_Robot.prototype.turnLeftRight = function(selectedDirection, numDegrees) {
+    console.log("direction: " + selectedDirection);
+    console.log("numDegrees: " + numDegrees);
+    
+    directionArr.push(selectedDirection);
+    positionArr.push(numDegrees);
+    isCompleted.push(false);
 }
 
 RoBlockWar_Robot.prototype.waitFor = function (seconds, callback) {
@@ -103,11 +167,9 @@ RoBlockWar_Robot.prototype.createInterpreterInitializer = function(highlightBloc
             return interpreter.createPrimitive(robot.devPause);
         };
         
-        interpreter.setProperty(scope, 'Registers', helper.nativeValueToInterpreter(robot.Registers));
-        interpreter.setProperty(scope, 'fireAtDistance', helper.nativeValueToInterpreter(robot.fireAtDistance));
         interpreter.setProperty(scope, 'moveForwardBackward', helper.nativeValueToInterpreter(robot.moveForwardBackward));
-        interpreter.setProperty(scope, 'sendRadarPulse', helper.nativeValueToInterpreter(robot.sendRadarPulse));
-        interpreter.setProperty(scope, 'waitFor', helper.nativeValueToInterpreter(robot.waitFor));;
+        interpreter.setProperty(scope, 'turnLeftRight', helper.nativeValueToInterpreter(robot.turnLeftRight));
+        interpreter.setProperty(scope, 'waitFor', helper.nativeValueToInterpreter(robot.waitFor));
         interpreter.setProperty(scope, 'highlightBlock',  helper.nativeValueToInterpreter(highlightWrapper));
         interpreter.setProperty(scope, 'devPause',  helper.nativeValueToInterpreter(pauseWrapper));
     };

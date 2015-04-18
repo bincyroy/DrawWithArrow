@@ -71,7 +71,8 @@ Blockly.JavaScript['rightleft'] = function(block) {
   var text_numdegrees = block.getFieldValue('numDegrees');
   var text_degreeslabel = block.getFieldValue('degreesLabel');
   // TODO: Assemble JavaScript into code variable.
-  var code = '...';
+  console.log("Turn Left Right //////////////////");
+  var code = 'turnLeftRight(\'' + dropdown_directions + '\', ' + text_numdegrees + '); ';
   return code;
 };
 
