@@ -40,7 +40,7 @@ RoBlockWar.Preloader.prototype = {
     this.load.spritesheet('robot', './assets/arrow.png', 68, 68);
     //this.load.spritesheet('robot', './assets/dude.png', 32, 48);
     this.load.image('logo', './assets/logo.png');
-    this.load.image('earth', './assets/sky.png');
+    this.load.image('earth', './assets/white.jpg');
     //this.load.image('bullet', './assets/bullet.png');
     this.load.image('point', './assets/point.png');
   },
