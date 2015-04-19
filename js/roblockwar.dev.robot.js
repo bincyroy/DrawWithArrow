@@ -38,16 +38,14 @@ RoBlockWar_Robot.prototype.update = function() {
         } else if(directionArr[i] === 'backwardDirection') {
             backwardTotal += positionArr[i];
         }
-        console.log("forwardTotal: ", forwardTotal);
-        console.log("backwardTotal: ", backwardTotal)
-        console.log("X Position: ", this.RobotPlayer.body.x);
+        //console.log("forwardTotal: ", forwardTotal);
+        //console.log("backwardTotal: ", backwardTotal)
+        //console.log("X Position: ", this.RobotPlayer.body.x);
         var count = 0;
         while(!isCompleted[i]) {
             this.RobotPlayer.body.velocity.x = 0;
             this.RobotPlayer.body.velocity.y = 0;
             if(directionArr[i] === "forwardDirection") {
-                
-                //this.RobotPlayer.body.velocity.y = 0;
                 if(moveUp) {
                     this.RobotPlayer.body.velocity.y = 150;
                     this.RobotPlayer.body.y -= 1;
@@ -55,37 +53,44 @@ RoBlockWar_Robot.prototype.update = function() {
                     count += 1;
                     this.RobotPlayer.animations.play('up');
                     if(count >= positionArr[i]) {
+                        console.log("Finished moving UP");
                         this.RobotPlayer.body.velocity.y = 0;
                         isCompleted[i] = true;
                     }
                 } else if(moveDown) {
+                    this.RobotPlayer.body.velocity.y = 150;
                     this.RobotPlayer.body.y += 1;
+                    this.RobotPlayer.game.add.sprite(this.RobotPlayer.body.x, this.RobotPlayer.body.y, 'point');
+                    count += 1;
                     this.RobotPlayer.animations.play('down');
+                    if(count >= positionArr[i]) {
+                        console.log("Finished moving DOWN");
+                        this.RobotPlayer.body.velocity.y = 0;
+                        isCompleted[i] = true;
+                    }
                 } else if(moveLeft) {
+                    this.RobotPlayer.body.velocity.x = 150;
                     this.RobotPlayer.body.x -= 1;
+                    this.RobotPlayer.game.add.sprite(this.RobotPlayer.body.x, this.RobotPlayer.body.y, 'point');
+                    count += 1;
                     this.RobotPlayer.animations.play('left');
+                    if(count >= positionArr[i]) {
+                        console.log("Finished moving LEFT");
+                        this.RobotPlayer.body.velocity.x = 0;
+                        isCompleted[i] = true;
+                    }
                 } else if(moveRight) {
                     this.RobotPlayer.body.velocity.x = 150;
                     this.RobotPlayer.body.x += 1;
                     this.RobotPlayer.game.add.sprite(this.RobotPlayer.body.x, this.RobotPlayer.body.y, 'point');
+                    count += 1;
                     this.RobotPlayer.animations.play('right');
-                    if(this.RobotPlayer.body.x >= positionArr[i]) {
+                    if(count >= positionArr[i]) {
+                        console.log("Finished moving RIGHT");
                         this.RobotPlayer.body.velocity.x = 0;
                         isCompleted[i] = true;
                     }
                 }
-                // this.RobotPlayer.game.add.sprite(this.RobotPlayer.body.x, 250, 'bullet');
-                //this.RobotPlayer.body.y = 250;
-                // this.RobotPlayer.animations.play('right');
-                /*
-                if(this.RobotPlayer.body.x >= Math.abs(forwardTotal - backwardTotal)) {
-                    this.RobotPlayer.body.velocity.x = 0;
-                    //this.RobotPlayer.body.velocity.y = 0; 
-                    //this.RobotPlayer.animations.stop();
-                    this.RobotPlayer.frame = 3;
-                    isCompleted[i] = true;
-                }
-                */
             } else if(directionArr[i] == "backwardDirection") {
                 this.RobotPlayer.body.velocity.x = 5;
                 this.RobotPlayer.body.velocity.y = 0;
@@ -103,11 +108,23 @@ RoBlockWar_Robot.prototype.update = function() {
                 console.log("TURN LEFT");
                 if(directionArr[i-1] == "forwardDirection") {
                     if(positionArr[i] <= 90) {
-                        this.RobotPlayer.animations.play('up');
-                        moveUp = true;
-                        moveDown = false;
-                        moveLeft = false;
-                        moveRight = false;
+                        if(moveUp) {
+                            moveUp = false;
+                            this.RobotPlayer.animations.play('left');
+                            moveLeft = true;
+                        } else if(moveDown) {
+                            moveDown = false;
+                            this.RobotPlayer.animations.play('right');
+                            moveRight = true;
+                        } else if(moveLeft) {
+                            moveLeft = false;
+                            this.RobotPlayer.animations.play('down');
+                            moveDown = true;
+                        } else if(moveRight) {
+                            moveRight = false;
+                            this.RobotPlayer.animations.play('up');
+                            moveUp = true;
+                        }
                     } else if(positionArr[i] > 90 && positionArr[i] <= 180) {
                         this.RobotPlayer.animations.play('left');
                     } else if(positionArr[i] > 180 && positionArr[i] <= 270) {
