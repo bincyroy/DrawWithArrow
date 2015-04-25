@@ -135,7 +135,35 @@ RoBlockWar_Robot.prototype.update = function() {
                     isCompleted[i] = true;
                 }
             } else if(directionArr[i] == "rightDirection") {
-                
+                console.log("TURN RIGHT");
+                if(directionArr[i-1] == "forwardDirection") {
+                    if(positionArr[i] <= 90) {
+                        if(moveUp) {
+                            moveUp = false;
+                            this.RobotPlayer.animations.play('right');
+                            moveRight = true;
+                        } else if(moveDown) {
+                            moveDown = false;
+                            this.RobotPlayer.animations.play('left');
+                            moveLeft = true;
+                        } else if(moveLeft) {
+                            moveLeft = false;
+                            this.RobotPlayer.animations.play('up');
+                            moveUp = true;
+                        } else if(moveRight) {
+                            moveRight = false;
+                            this.RobotPlayer.animations.play('down');
+                            moveDown = true;
+                        }
+                    } else if(positionArr[i] > 90 && positionArr[i] <= 180) {
+                        this.RobotPlayer.animations.play('left');
+                    } else if(positionArr[i] > 180 && positionArr[i] <= 270) {
+                        this.RobotPlayer.animations.play('down');
+                    } else if(positionArr[i] > 270 && positionArr[i] <= 360) {
+                        this.RobotPlayer.animations.play('right');
+                    }
+                    isCompleted[i] = true;
+                }
             }
         } // while
     }
